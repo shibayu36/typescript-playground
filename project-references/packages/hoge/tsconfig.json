@@ -11,8 +11,9 @@
     "rootDir": "src/ts",
     "composite": true,
     "declaration": true,
+    "declarationMap": true,
     "outDir": "./dist"
   },
-  "exclude": ["node_modules"],
+  "exclude": ["node_modules", "dist"],
   "compileOnSave": false
 }
