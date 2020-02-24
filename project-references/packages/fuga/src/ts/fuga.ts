@@ -1,3 +1,3 @@
-import { hogeFunction } from "@project-references/hoge";
+import { hogeFunction } from "@project-references/hoge/dist/hoge";
 
 hogeFunction();

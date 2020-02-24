@@ -10,7 +10,8 @@
     "removeComments": false,
     "rootDir": "src/ts",
     "composite": true,
-    "declaration": true
+    "declaration": true,
+    "outDir": "./dist"
   },
   "exclude": ["node_modules"],
   "compileOnSave": false
