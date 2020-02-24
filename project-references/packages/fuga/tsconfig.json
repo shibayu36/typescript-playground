@@ -8,7 +8,13 @@
     "forceConsistentCasingInFileNames": false,
     "removeComments": false,
     "rootDir": "src/ts",
-    "outDir": "./dist"
+    "outDir": "./dist",
+    "baseUrl": "./",
+    "paths": {
+      "@project-references/hoge/*": [
+        "../../node_modules/@project-references/hoge/dist/*"
+      ]
+    }
   },
   "exclude": ["node_modules"],
   "references": [{ "path": "../hoge" }]
