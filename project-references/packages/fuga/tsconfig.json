@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "ES5",
+    "noEmitOnError": true,
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "forceConsistentCasingInFileNames": false,
+    "removeComments": false,
+    "rootDir": "src/ts"
+  },
+  "exclude": ["node_modules"],
+  "references": [{ "path": "../hoge" }]
+}
