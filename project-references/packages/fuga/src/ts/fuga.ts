@@ -1,3 +1,4 @@
-import { hogeFunction } from "@project-references/hoge/hoge";
+import { log, shuffle } from "@project-references/hoge/dist/hoge";
 
-hogeFunction();
+log();
+console.log(shuffle([1, 2, 3, 4]));
