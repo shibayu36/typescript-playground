@@ -1,7 +1,7 @@
 import React from "react";
 
-const EffectOrder: React.FC = () => {
-  return <div></div>;
+export const EffectOrder: React.FC = () => {
+  return <div>EffectOrder</div>;
 };
 
 const Effect: React.FC = () => {
