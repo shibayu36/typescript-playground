@@ -12,7 +12,7 @@ export const EffectOrder: React.FC = () => {
   return (
     <>
       <Link to="/">Home</Link>
-      <div>
+      <div ref={(ref) => console.log("EffectOrder ref", ref)}>
         <p>EffectOrder Component</p>
         <Effect />
       </div>
@@ -29,7 +29,7 @@ const Effect: React.FC = () => {
     };
   }, []);
   return (
-    <div>
+    <div ref={(ref) => console.log("Effect ref", ref)}>
       <p>Effect Component</p>
       <LayoutEffect />
     </div>
@@ -48,7 +48,7 @@ const LayoutEffect: React.FC = () => {
     };
   }, []);
   return (
-    <div>
+    <div ref={(ref) => console.log("LayoutEffect ref", ref)}>
       <p>LayoutEffect Component</p>
       <Child />
     </div>
@@ -58,12 +58,14 @@ const LayoutEffect: React.FC = () => {
 const Child: React.FC = () => {
   console.log("Child rendering");
   useEffect(() => {
+    runSec(2);
     console.log("Child useEffect");
     return () => {
+      runSec(2);
       console.log("Child useEffect cleanup");
     };
   }, []);
-  return <div>Child Component</div>;
+  return <div ref={(ref) => console.log("Child ref", ref)}>Child Component</div>;
 };
 
 function runSec(seconds: number): void {
