@@ -7,7 +7,7 @@ import { EffectOrder } from "./EffectOrder";
 const Home: React.FC = () => {
   console.log("Home rendering");
   return (
-    <header className="App-header">
+    <header className="App-header" ref={(ref) => console.log("Home ref", ref)}>
       <img src={logo} className="App-logo" alt="logo" />
       <p>
         Edit <code>src/App.tsx</code> and save to reload.
