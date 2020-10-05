@@ -1,6 +1,206 @@
 // 問題: https://qiita.com/uhyo/items/e4f54ef3b87afdd65546
 // 回答: https://qiita.com/uhyo/items/0e7821ce494024c98da5
 
+/** 4-8. オプショナルなキーだけ抜き出す (不正解) */
+// type PickUndefined<Obj> = {
+//   [K in keyof Obj]-?: undefined extends Obj[K] ? K : never;
+// }[keyof Obj];
+
+// type MapToNever<Obj> = {
+//   [K in keyof Obj]: never;
+// };
+
+// type OptionalKeys<Obj> = PickUndefined<MapToNever<Obj>>;
+
+// // 使用例
+// type Data = {
+//   foo: string;
+//   bar?: number;
+//   baz?: boolean;
+
+//   hoge: undefined;
+//   piyo?: undefined;
+// };
+
+// // "bar" | "baz" | "piyo"
+// type T = OptionalKeys<Data>;
+
+/** 4-7. 条件を満たすキーだけを抜き出す */
+// type KeysOfType<Obj, Val, Key = keyof Obj> = Key extends keyof Obj
+//   ? Obj[Key] extends Val
+//     ? Key
+//     : never
+//   : never;
+// // type KeysOfType<Obj, Val> = {
+// //   [K in keyof Obj]-?: Obj[K] extends Val ? K : never
+// // }[keyof Obj];
+
+// // 使用例
+// type Data = {
+//   foo: string;
+//   bar: number;
+//   baz: boolean;
+
+//   hoge?: string;
+//   fuga: string;
+//   piyo?: number;
+// };
+
+// // "foo" | "fuga"
+// // ※ "hoge" は string | undefiendなので含まない
+// type StringKeys = KeysOfType<Data, string>;
+
+// function useNumber<Obj>(obj: Obj, key: KeysOfType<Obj, number>) {
+//   // ヒント: ここはanyを使わざるを得ない
+//   const num: number = (obj as any)[key];
+//   return num * 10;
+// }
+
+// declare const data: Data;
+
+// // これはOK
+// useNumber(data, "bar");
+// // これは型エラー
+// useNumber(data, "baz");
+
+/** 4-6. ページを描画する関数 (不正解) */
+// type Page =
+//   | {
+//       page: "top";
+//     }
+//   | {
+//       page: "mypage";
+//       userName: string;
+//     }
+//   | {
+//       page: "ranking";
+//       articles: string[];
+//     };
+
+// // PageGeneratorsのkeyはPage.page。つまりunion distributionでpageを抜き出す
+// /**
+//  * PageGenerators = {
+//  *   top: () => string,
+//  *   mypage: (prop: { userName: string }) => string,
+//  *   ranking: (prop: { articles: string[] }) => string,
+//  * }
+//  */
+// /**
+//  * PageGenerators = {
+//  *   [P in keyof PageNames]: (Omit<)
+//  * }
+//  */
+// // PageGenerators = { top: }
+// type PageGenerators = {
+//   [P in Page["page"]]: (page: Extract<Page, { page: P }>) => string;
+// };
+
+// const pageGenerators: PageGenerators = {
+//   top: () => "<p>top page</p>",
+//   mypage: ({ userName }) => `<p>Hello, ${userName}!</p>`,
+//   ranking: ({ articles }) =>
+//     `<h1>ranking</h1>
+//          <ul>
+//         ${articles.map((name) => `<li>${name}</li>`).join("")}</ul>`,
+// };
+// const renderPage = (page: Page) => pageGenerators[page.page](page as any);
+
+/** 4-5. 最低一つは必要なオプションオブジェクト (不正解) */
+// {} extends T ? never : T
+// { foo } | { bar } | { baz } < union distribution したらいい
+
+// type PartiallyPartial<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
+// type AtLeastOneSpread<T, K extends keyof T> = K extends keyof T
+//   ? PartiallyPartial<T, Exclude<keyof T, K>>
+//   : never;
+// type AtLeastOne<T> = AtLeastOneSpread<T, keyof T>;
+
+// // 使用例
+// interface Options {
+//   foo: number;
+//   bar: string;
+//   baz: boolean;
+// }
+// function test(options: AtLeastOne<Options>) {
+//   const { foo, bar, baz } = options;
+//   // 省略
+// }
+// test({
+//   foo: 123,
+//   bar: "bar",
+// });
+// test({
+//   baz: true,
+// });
+
+// // エラー例
+// test({});
+
+/** 4-4. 一部だけPartial */
+// type PartiallyPartial<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
+// // 使用例
+
+// // 元のデータ
+// interface Data {
+//   foo: number;
+//   bar: string;
+//   baz: string;
+// }
+// /*
+//  * T1は { foo?: number; bar?: string; baz: string } 型
+//  */
+// type T1 = PartiallyPartial<Data, "foo" | "bar">;
+// const var1: T1 = {
+//   baz: "string",
+// };
+// const var2: T1 = {
+//   foo: 1,
+//   bar: "",
+// };
+
+// { baz: number } & { foo?: number, bar?: string }
+// Omit<Data, "foo" | "bar"> & Partial<{ foo: number, bar: string }>
+// { foo?: number, bar?: string } = { [P in ...]?: }
+
+/** 4-3. unionは嫌だ (不正解) */
+// type Spread<Ev, EvOrig, E> = Ev extends keyof E
+//   ? EvOrig[] extends Ev[]
+//     ? E[Ev]
+//     : never
+//   : never;
+// interface EventPayloads {
+//   start: {
+//     user: string;
+//   };
+//   stop: {
+//     user: string;
+//     after: number;
+//   };
+//   end: {};
+// }
+
+// class EventDischarger<E> {
+//   emit<Ev extends keyof E>(eventName: Ev, payload: Spread<Ev, Ev, E>) {
+//     // 省略
+//   }
+// }
+
+// // 使用例
+// const ed = new EventDischarger<EventPayloads>();
+// ed.emit("start", {
+//   user: "user1",
+// });
+// ed.emit("stop", {
+//   user: "user1",
+//   after: 3,
+// });
+// ed.emit("end", {});
+
+// // エラー例
+// ed.emit<"start" | "stop">("stop", {
+//   user: "user1",
+// });
+
 /** 4-2. プロパティを上書きする関数 */
 // function giveId<T extends object>(obj: T): Omit<T, "id"> & { id: string } {
 //   const id = "本当はランダムがいいけどここではただの文字列";
