@@ -22,7 +22,6 @@ type Data = {
 
 // "bar" | "baz" | "piyo"
 type T = OptionalKeys<Data>;
-type Hoge = MapToNever<Data>
 
 /** 4-7. 条件を満たすキーだけを抜き出す */
 type KeysOfType<Obj, Val> = {
