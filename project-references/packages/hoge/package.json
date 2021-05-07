@@ -6,6 +6,6 @@
   "private": true,
   "dependencies": {
     "@types/underscore": "^1.9.4",
-    "underscore": "^1.9.2"
+    "underscore": "^1.12.1"
   }
 }
