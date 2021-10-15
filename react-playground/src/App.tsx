@@ -1,4 +1,5 @@
 import React from "react";
+import { useAuth0 } from "@auth0/auth0-react";
 import logo from "./logo.svg";
 import "./App.css";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
@@ -6,6 +7,7 @@ import { EffectOrder } from "./EffectOrder";
 
 const Home: React.FC = () => {
   console.log("Home rendering");
+  const { user, loginWithRedirect } = useAuth0();
   return (
     <header className="App-header" ref={(ref) => console.log("Home ref", ref)}>
       <img src={logo} className="App-logo" alt="logo" />
@@ -18,6 +20,8 @@ const Home: React.FC = () => {
       <Link className="App-link" to="/effect-order">
         effect order
       </Link>
+
+      {user ? <p>{user.name}</p> : <button onClick={() => loginWithRedirect()}>Log In</button>}
     </header>
   );
 };
