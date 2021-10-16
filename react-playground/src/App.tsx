@@ -7,7 +7,7 @@ import { EffectOrder } from "./EffectOrder";
 
 const Home: React.FC = () => {
   console.log("Home rendering");
-  const { user, loginWithRedirect } = useAuth0();
+  const { user, loginWithRedirect, logout } = useAuth0();
   return (
     <header className="App-header" ref={(ref) => console.log("Home ref", ref)}>
       <img src={logo} className="App-logo" alt="logo" />
@@ -21,7 +21,13 @@ const Home: React.FC = () => {
         effect order
       </Link>
 
-      {user ? <p>{user.name}</p> : <button onClick={() => loginWithRedirect()}>Log In</button>}
+      {user ? (
+        <>
+          <p>{user.name}</p> <button onClick={() => logout({ returnTo: window.location.origin })}>Log Out</button>
+        </>
+      ) : (
+        <button onClick={() => loginWithRedirect()}>Log In</button>
+      )}
     </header>
   );
 };
